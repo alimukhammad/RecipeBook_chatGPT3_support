@@ -1,3 +1,5 @@
+import java.io.*;
+
 //class
 public class Recipe {
     //private instance
@@ -52,5 +54,44 @@ public class RecipeBook {
         recipes.add(recipe);
     }
     
+    public Recipe getRecipe(int index) {
+        return recipes.get(index);
+    }
+
+    public ArrayList<Recipe> searchRecipes(String searchTerm) {
+        ArrayList<Recipe> matchingRecipes = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            if (recipe.getRecipeName().toLowerCase().contains(searchTerm.toLowerCase()) || 
+                recipe.getIngredients().toString().toLowerCase().contains(searchTerm.toLowerCase())) {
+                matchingRecipes.add(recipe);
+            }
+        }
+        return matchingRecipes;
+    }
+
+    public void deleteRecipe(Recipe recipe) {
+        recipes.remove(recipe);
+    }
+
+    public void updateRecipe(Recipe oldRecipe, Recipe newRecipe) {
+        int index = recipes.indexOf(oldRecipe);
+        if (index != -1) {
+            recipes.set(index, newRecipe);
+        }
+    }
+
+    public void saveToFile(String fileName) throws IOException {
+        FileOutputStream fos = new FileOutputStream(fileName);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(recipes);
+        oos.close();
+    }
+    
+    public void loadFromFile(String fileName) throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(fileName);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        recipes = (ArrayList<Recipe>) ois.readObject();
+        ois.close();
+    }
     // Other methods go here
 }
